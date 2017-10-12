@@ -1,0 +1,29 @@
+//Famicom Jump II
+board <- {
+	mappernum = 178, vram_mirrorfind = false, ppu_ramfind = false,
+	cpu_rom = {
+		size_base = 16 * 0x8000, size_max = 16 * 0x8000,
+		banksize = 0x2000
+	}, 
+	ppu_rom = {
+		size_base = 0, size_max = 0,
+		banksize = 0x2000
+	}
+};
+
+function cpu_dump(d, pagesize, banksize)
+{
+	for(local i = 0; i < 4; i += 1)
+	{
+		for(local j = 0; j < 8; j += 1)
+		{
+			for(local k = 0; k < 0x4000; k += 0x100)
+			{
+				cpu_write(d, 0x4800, 2);
+				cpu_write(d, 0x4802, i);
+				cpu_write(d, 0x4801, j);
+				cpu_read(d, 0x8000+k, 0x100);
+			}
+		}
+	}
+}

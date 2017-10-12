@@ -1,0 +1,183 @@
+﻿Famicom ROM Cartridge Utility - anago
+By the Unagi Development Team
+Official project page http://unagi.sourceforge.jp/
+
+--Infoduction--
+'anago' is an alternative version of 'unagi' with added experimental 
+functions. Processing speed same as unagi on the dump mode. When using 
+parallel tasks via programming mode, processing speed is slightly 
+faster.
+
+anago supports 'kazzo' only. 
+
+--GUI version---
+Lunch anago_wx.exe.
+
+--script exetentions--
+script exetentions means supported functions.
+ad: dump
+ad: dump
+ae: dump + workram
+af: dump + program
+ag: dump + workram + program
+ai: For include. ai file exists called by ad, ae, af or ag file.
+
+--command line arguments--
+anago.exe [mode] [script file] [target file] ...
+
+== d D ROM DUMP MODE ==
+anago creates ROM images.
+anago.exe [d??] [script file] [dump file] [mapper]
+d?? or D?? - 
+  This parameter is for specifying the dump length amount. Default 
+  parameter is auto length (CPU) / one time length (PPU). 
+  First charcter is assigned for CPU  region, second charcter is
+  assigned for PPU region in '??'.
+  '2' specifies the dump size twice as big. This parameter is avalible 
+      for unrom.af, mmc3.ag and mmc5.af.
+  '4' specifies the dump size four times as big. This parameter is 
+      avalible for mmc5.af.
+D?? - Dumping progress display, same as unagi.exe.
+script file - script file for each respective target cartridge/board.
+dump file - the resulting .nes file. 
+mapper - 
+  used to set another mapper number for the .nes file's header. 
+  (usually not necessary. See example3.)
+
+example1.1: Dumping an ROM image from a UNROM board
+> anago.exe d unrom.af unrom.nes
+In this case, anago will identify the VRAM mirroring connection from 
+the target cartridge.
+
+example1.2: Dumping an ROM image from a UOROM board
+> anago.exe d2 unrom.af uorom.nes
+Since a UOROM board's data size is twice as big as a UNROM board, you 
+will have to specify this manually. Bacause the software of UOROM is 
+less than that of UNROM.
+
+example2: Dumping a Metal Slader Glory ROM image / ELROM
+> anago.exe d22 mmc5.af hal_4j.nes
+Usually 2M+2M is large enough to dump images in most MMC5 mapper 
+boards. However MMC5 can manage 8M+8M in total. In this case specify 
+the length amount accordingly. 
+
+example3: Dumping a Ys III image / TKSROM
+> anago.exe d mmc3.ag vfr_q8_12.nes 118
+Enter digits on last commandline word to change the mapper number 
+according to MMC3 variants. 
+
+== f F FLASH MEMORY PROGRAMMING MODE ==
+anago programs ROM image data into a cartridge which has its mask ROMs 
+replaced with flash memory.
+
+anago.exe [f??] [script file] [programming file] [cpu device] [ppu device]
+f?? - 
+  This specifies the tranfer method. Default parameter is 'f'. First 
+  charcter is assigned for CPU region, second charcter is assigned for 
+  PPU region in '??'.
+  'f' parameter - anago will transfer data to all of the managable 
+      memory areas. It has full compatiblity for smaller ROM image than 
+      manageble memory area. This method is the slowest.
+  't' parameter - anago will transfer data based on the top-most 
+      managable memory area. In most cases, both program and character 
+      memory will work fine with it.
+  'b' parameter - anago transfer data based on the bottom-most managable
+       memory area. 
+F?? - 
+  anago will compare the data with the programmed memory areas. If 
+  the compared result is inconsistent, further programming will be 
+  aborted.
+script file - this specifies .af or .ag file for target cartridge.
+programming file - this specifies the .nes program file.
+cpu device, ppu device -
+  this specifies the flash memory type installed on the target board. 
+  Supported devices are written in flashdevice.nut. 'dummy' is a 
+  special device type which will not allow any tranfer of data.
+
+example1.1: Tranfer 1M+1M image to mmc3 / TLROM.
+> anago.exe f mmc3.ag tlrom_1M_1M.nes AM29F040B AM29F040B
+MMC3 can manage 4M+2M. In this case, anago will transfer 4x1M data 
+into 4M. anago will also transfer 2x1M data into 2M. 
+This transfer method will also work for dumping images when in dump 
+mode.
+
+example1.2: Tranfer 1M+1M image to mmc3 / TLROM.
+> anago.exe ftt mmc3.ag tlrom_1M_1M.nes AM29F040B AM29F040B
+In this case, anago will transfer 1M program data into 4M on the 
+top-most memory region. anago will also transfer 1M character data 
+into 2M of the top-most memory region. Transfer time is shorter with 
+this method. 
+
+example1.3: Tranfer 1M+1M image to mmc3 / TLROM.
+> anago.exe fbt mmc3.ag tlrom_1M_1M.nes AM29F040B AM29F040B
+In this case, anago will transfer 1M data into 4M of the bottom-most 
+memory region. anago will also transfer 1M data into 2M of the 
+top-most memory region. This method will often work with program 
+images from Konami and Namcot. 
+
+Keep in mind that mmc3 is not compatible with Namcot 109 images. This 
+is due to the 109 board containing hard-wired vram mirroring, which 
+isn't available in mmc3.
+
+Furthermore, Namcot 106 is a fictitious device which is well known for 
+its extra sound source. Keep this in mind when comparing 109 and 106.
+
+example2: tranfer UNROM(1M) image to UOROM.
+> anago.exe ft uorom.af unrom.nes AM29F040B
+If charcter memory is RAM, charcter device can be skipped.
+
+example3: Transfferring only charcter ROM image to mmc1/ SLROM
+> anago.exe fet mmc1_slrom.ag skrom.nes dummy AM29F040B
+> anago.exe ftt mmc1_slrom.ag skrom.nes AM29F040B AM29F040B
+anago works the same way via both methods.
+
+== r WORK RAM READ MODE ==
+anago creates a RAM image file from work RAM (save data).
+anago.exe [r?] [script file] [ramimage file]
+r? - 
+  This parameter is for specifying the dump length amount. Default 
+  parameter is one time length.
+  '2' specifies the dump size twice as big.
+  '4' specifies the dump size four times as big. This parameter is 
+      avalible for mmc1_surom.ag and SXROM.
+script file - script file for each respective target cartridge/board.
+ramimage file - the resulting .sav file. 
+
+example1.1: Reading an RAM image from a SKROM board
+> anago.exe r mmc1_skrom.ag skrom.sav
+
+example1.2: Reading an RAM image from a SXROM board
+> anago.exe r4 mmc1_surom.ag sqf_fo.sav
+mmc1_surom.ag supports SUROM and SXROM boards.
+
+== w WORK RAM WRITE MODE ==
+anago write RAM image on work RAM.
+anago.exe [w?] [script file] [ramimage file]
+w? - 
+  This parameter is for specifying the dump length amount. Default 
+  parameter is one time length.
+  '2' specifies the dump size twice as big.
+  '4' specifies the dump size four times as big. This parameter is 
+      avalible for mmc1_surom.ag and SXROM.
+script file - script file for each respective target cartridge/board.
+ramimage file - this specifies the .sav file.
+
+example2.1: Writing an RAM image from a SKROM board
+> anago.exe w mmc1_skrom.ag skrom.sav
+
+example2.2: Writeng an RAM image from a SXROM board
+> anago.exe w4 mmc1_surom.ag sqf_fo.sav
+
+--misc infomation--
+- It's a complicated process to explain the concept of "top-most" and 
+  "bottom-most" tranfer methods, which will not be explained in this 
+  manual. In most cases, please use the full tranfer method instead.
+
+--used libaries---
+[LibUSB-Win32]
+Copyright (c) 2002-2004 Stephan Meyer, <ste_meyer@web.de>
+Copyright (c) 2000-2004 Johannes Erdfelt, <johannes@erdfelt.com>
+Copyright (c) Thomas Sailer, <sailer@ife.ee.ethz.ch>
+[SQUIRREL 2.2.4 stable] Copyright (C) 2003-2009 Alberto Demichelis
+[wxWidgets] (c) Julian Smar
+[opendevice.c] (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH

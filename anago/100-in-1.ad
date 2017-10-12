@@ -1,0 +1,30 @@
+board <- {
+	mappernum = 15, vram_mirrorfind = true, ppu_ramfind = false,
+	cpu_rom = {
+		size_base = 1 * mega, size_max = 512*1024
+		banksize = 0x4000
+	}, 
+	ppu_rom = {
+		size_base = 0, size_max = 0,
+		banksize = 0x2000
+	}
+};
+
+function cpu_dump(d, pagesize, banksize)
+{
+	for(local i = 0; i < pagesize - 1; i += 1){
+		cpu_write(d, 0x8002, i);
+		cpu_read(d, 0x8000, banksize);
+		cpu_read(d, 0xC000, banksize);
+	}
+}
+
+/*
+UNROM/UOROM programming notice
+command address supports A10-A0 device. A14-A0 is not supported!
+*/
+function program_initalize(d, cpu_banksize, ppu_banksize)
+{
+	cpu_write(d, 0x8002, 0);
+}
+
