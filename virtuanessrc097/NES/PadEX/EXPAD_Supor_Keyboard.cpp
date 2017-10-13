@@ -27,6 +27,8 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 	if (DirectInput.HasTypedKeys()) {
 		setzero = DirectInput.LoadTypedKeys();
 	}
+	//DEBUGOUT("SUPOR KEYBOARD SCAN AT %d, Out=%d\r\n", ScanNo,bOut);
+
 	switch( ScanNo ) {
 		case	1:
 			if( bOut ) {
@@ -273,6 +275,7 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 					data &= ~0x08;
 					hits.push_back(DIK_Z);
 				}
+				//QUIT BG-GRAPHICS WITH TAB KEY!!!
 				if( DirectInput.m_Sw[DIK_TAB     ] )
 				{
 					data &= ~0x10;
@@ -439,10 +442,9 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 			break;
 		case	10:
 			if( bOut ) {
+
 			} else {
 				data &= ~0x02;
-				//hits.push_back(0);
-				//hits.push_back(0);
 			}
 			break;
 		case	11:
@@ -462,11 +464,11 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 					data &= ~0x08;
 					hits.push_back(DIK_NUMPAD7);
 				}
-				if( DirectInput.m_Sw[DIK_F11     ] )
-				{
-					data &= ~0x10;
-					hits.push_back(DIK_F11);
-				}
+				//if( DirectInput.m_Sw[DIK_F11     ] )
+				//{
+				//	data &= ~0x10;
+				//	hits.push_back(DIK_F11);
+				//}
 			} else {
 				if( DirectInput.m_Sw[DIK_F12     ] )
 				{
@@ -513,7 +515,7 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 					hits.push_back(DIK_NUMPAD9);
 				}
 			} else {
-				if( DirectInput.m_Sw[DIK_F10     ] ) 
+				if( DirectInput.m_Sw[DIK_F10     ])
 				{
 					data &= ~0x02;
 					hits.push_back(DIK_F10);
@@ -551,9 +553,6 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 				{
 					data &= ~0x08;
 					hits.push_back(DIK_PAUSE);
-					//simulate G-BASIC reset
-					Emu.GetNES()->GotoGBasicReset();
-
 				}
 				if( DirectInput.m_Sw[DIK_SPACE ] ) 
 				{
@@ -594,6 +593,8 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 
 void	EXPAD_Supor_Keyboard::Write4016( BYTE data )
 {
+	//DEBUGOUT("SUPOR KEYBOARD WRITING4016 WITH %d\r\n", data);
+
 	if( data == 0x05 ) {
 		bOut = FALSE;
 		ScanNo = 0;

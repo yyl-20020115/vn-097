@@ -3270,6 +3270,8 @@ void	CMainFrame::OnUpdateMenu( HMENU hMenu, UINT uID )
 		case	ID_DUMP_DUMPCPUMEMORY:
 		case	ID_DUMP_DUMPPPUMEMORY:
 		case	ID_TOOL_TYPECLIPBOARD:
+		case	ID_TOOL_COPYSCREEN:
+
 			::EnableMenuItem( hMenu, uID, MF_BYCOMMAND|(bEmu?MF_ENABLED:MF_GRAYED) );
 			break;
 
