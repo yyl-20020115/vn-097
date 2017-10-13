@@ -82,7 +82,7 @@ public:
 	void	Reset();
 	void	SoftReset();
 
-	void	Goto0x8000();
+	void	GotoGBasicReset();
 
 	void	Clock( INT cycles );
 

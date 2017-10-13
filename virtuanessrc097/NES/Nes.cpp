@@ -473,8 +473,11 @@ void	NES::SoftReset()
 	base_cycles = emul_cycles = 0;
 }
 
-void	NES::Goto0x8000()
+void	NES::GotoGBasicReset()
 {
+	//WORD ResetVector = ((WORD)this->Read(0xFFFC))|((WORD)this->Read(0xFFFD)<<8);
+	//this->cpu->SetPC(ResetVector);
+
 	this->cpu->SetPC(0x8000);
 }
 

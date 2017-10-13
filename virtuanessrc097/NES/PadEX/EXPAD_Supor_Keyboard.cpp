@@ -552,7 +552,7 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 					data &= ~0x08;
 					hits.push_back(DIK_PAUSE);
 					//simulate G-BASIC reset
-					Emu.GetNES()->Goto0x8000();
+					Emu.GetNES()->GotoGBasicReset();
 
 				}
 				if( DirectInput.m_Sw[DIK_SPACE ] ) 
