@@ -82,6 +82,8 @@ public:
 	void	Reset();
 	void	SoftReset();
 
+	void	Goto0x8000();
+
 	void	Clock( INT cycles );
 
 	BYTE	Read ( WORD addr );
@@ -185,6 +187,8 @@ public:
 		NESCMD_DISK_3B,
 
 		NESCMD_SOUND_MUTE,	// CommandParam
+
+		NESCMD_GOTO_0X8000,
 	};
 
 	void	Command( NESCOMMAND cmd );

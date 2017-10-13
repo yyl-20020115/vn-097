@@ -473,6 +473,11 @@ void	NES::SoftReset()
 	base_cycles = emul_cycles = 0;
 }
 
+void	NES::Goto0x8000()
+{
+	this->cpu->SetPC(0x8000);
+}
+
 void	NES::EmulationCPU( INT basecycles )
 {
 INT	cycles;
@@ -2536,6 +2541,9 @@ BOOL	NES::CommandParam( NESCOMMAND cmd, INT param )
 
 		case	NESCMD_SOUND_MUTE:
 			return	apu->SetChannelMute( (BOOL)param ); // リターン値は変更後のミュート状態
+		case	NESCMD_GOTO_0X8000:
+			this->cpu->SetPC(0x8000);
+			break;
 	}
 
 	return	TRUE;

@@ -86,6 +86,10 @@ public:
 	void	GetContext( R6502& r )	{ r = R; }
 
 	void	SetClockProcess( BOOL bEnable ) { m_bClockProcess = bEnable; }
+
+	WORD	GetPC();
+	void	SetPC(WORD PC);
+
 protected:
 	NES*	nes;
 	APU*	apu;

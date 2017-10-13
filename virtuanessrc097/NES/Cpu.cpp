@@ -672,6 +672,14 @@ inline	void	CPU::WR6502( WORD addr, BYTE data )
 		nes->Write( addr, data );
 	}
 }
+WORD	CPU::GetPC()
+{
+	return this->R.PC;
+}
+void	CPU::SetPC(WORD PC)
+{
+	this->R.PC = PC;
+}
 
 //
 // ƒŠƒZƒbƒg
