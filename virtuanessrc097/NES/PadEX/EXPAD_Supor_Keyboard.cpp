@@ -28,7 +28,11 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 		setzero = DirectInput.LoadTypedKeys();
 	}
 	//DEBUGOUT("SUPOR KEYBOARD SCAN AT %d, Out=%d\r\n", ScanNo,bOut);
-
+	//SB-486B has more scan lines, therefore it has 
+	//PAUSE BREAK RESET 
+	//mapping to
+	//PrintScreen ScrollLock Pause
+	//which is not implemented in this file
 	switch( ScanNo ) {
 		case	1:
 			if( bOut ) {
@@ -275,7 +279,7 @@ BYTE	EXPAD_Supor_Keyboard::Read4017()
 					data &= ~0x08;
 					hits.push_back(DIK_Z);
 				}
-				//QUIT BG-GRAPHICS WITH TAB KEY!!!
+				//QUIT BG-GRAPHICS WITH TAB KEY!!!(FOR SB-486B:CTRL+C)
 				if( DirectInput.m_Sw[DIK_TAB     ] )
 				{
 					data &= ~0x10;
